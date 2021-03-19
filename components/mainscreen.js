@@ -6,20 +6,20 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import * as firebase from "firebase";
 import { object } from "yup/lib/locale";
-import Tododata from "../config";
-import { FirebaseConfig } from "../config";
+// import Tododata from "../config";
+import { firebaseConfig } from "../config";
 
 
 
 
 
-// if (!firebase.apps.length) {
-//     firebase.initializeApp(FirebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 
-// }
+}
 
-// const db = firebase.firestore();
-// const Tododata = db.collection("user");
+const db = firebase.firestore();
+const Tododata = db.collection("TODO");
 
 
 
@@ -41,6 +41,8 @@ const reviewSchema = yup.object({
 export const Page2 = ({ navigation }) => {
 
     const [dataof, setdata] = useState([])
+    const [firedata, setfiredata] = useState([])
+
 
     useEffect(() => {
 
@@ -55,13 +57,21 @@ export const Page2 = ({ navigation }) => {
 
         // for cloud
 
-        // Tododata.onSnapshot((querySnapShot) => {
-        //     querySnapShot.forEach((doc) => {
-        //         dAta.push(doc.data());
-        //     });
-        // });
+        Tododata.onSnapshot((querySnapShot) => {
+            querySnapShot.forEach((doc) => {
+                dAta.push(doc.data());
+                // console.log("datataa", doc.data())
 
-        // console.log("datataa", dAta)
+            });
+            setfiredata(dAta);
+            console.log("datataa", firedata)
+
+
+
+
+
+        });
+
 
 
 
@@ -81,7 +91,7 @@ export const Page2 = ({ navigation }) => {
             if (dataofser.val()) {
                 setdata(Object.values(dataofser.val()))
                 // console.log(dataof[0].body);
-                console.log(dataof);
+                // console.log(dataof);
             }
         })
 
@@ -212,21 +222,19 @@ export const Page2 = ({ navigation }) => {
 
 
             <View style={styles.lists}>
-                <ScrollView>
-                    <FlatList data={dataof} renderItem={({ item }) => (
-                        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                <FlatList data={dataof} renderItem={({ item }) => (
+                    <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
 
-                            <Text style={styles.text}>Title: {item.title}</Text>
-                            <Text style={styles.text}> Body: {item.body}</Text>
-                            <Text style={styles.text}> Rating: {item.rating}</Text>
-
-
-                        </View>
+                        <Text style={styles.text}>Title: {item.title}</Text>
+                        <Text style={styles.text}> Body: {item.body}</Text>
+                        <Text style={styles.text}> Rating: {item.rating}</Text>
 
 
+                    </View>
 
-                    )} />
-                </ScrollView>
+
+
+                )} />
 
 
             </View>
