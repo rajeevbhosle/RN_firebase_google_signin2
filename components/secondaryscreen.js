@@ -16,14 +16,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 
 
-
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 
 }
 
+
 const db = firebase.firestore();
-let Tododata = db.collection("TODO");
+const Tododata = db.collection("TODO");
 
 
 
@@ -47,20 +47,23 @@ export const Page3 = ({ navigation }) => {
     const [dataof, setdata] = useState([])
     const [togglebutton, settogglebutton] = useState(true)
     const [id, setid] = useState('')
+    const [dbname, setdbname] = useState('TODO')
+
 
 
 
     useEffect(() => {
-        setdbname();
+
+        funsetdbname();
 
         return () => {
         }
     }, [])
 
-    const setdbname = async () => {
-        let db_name = await AsyncStorage.getItem("dbname");
-
-        console.log("dbname", db_name)
+    const funsetdbname = async () => {
+        var db_name = await AsyncStorage.getItem("dbname");
+        setdbname(db_name)
+        console.log("dbname", dbname)
     }
 
 
@@ -85,7 +88,11 @@ export const Page3 = ({ navigation }) => {
 
 
         //second way
-        Tododata.get().then(querysnapshot => {
+
+
+        db.collection(dbname).get().then(querysnapshot => {
+            // Tododata.get().then(querysnapshot => {
+
             querysnapshot.forEach(documentsnapshot => {
                 // console.log("document data", documentsnapshot.data(), documentsnapshot.id)
                 dAta.push({ id: documentsnapshot.id, data: documentsnapshot.data() });
@@ -100,7 +107,10 @@ export const Page3 = ({ navigation }) => {
 
         // console.log("id is", id)
         const aa = id;
-        Tododata.doc(aa).delete().then(() => {
+
+        db.collection(dbname).doc(aa).delete().then(() => {
+
+            // Tododata.doc(aa).delete().then(() => {
             Alert.alert("success");
             fetchdata();
 
@@ -110,7 +120,6 @@ export const Page3 = ({ navigation }) => {
     }
 
     const addReview = async (review) => {
-
         let values = {
             title: review.title,
             body: review.body,
@@ -119,7 +128,9 @@ export const Page3 = ({ navigation }) => {
 
         //for cloud
 
-        Tododata.add(values).then(() => {
+        db.collection(dbname).add(values).then(() => {
+            // Tododata.add(values).then(() => {
+
             Alert.alert("success");
             fetchdata();
         })
@@ -157,7 +168,9 @@ export const Page3 = ({ navigation }) => {
         console.log("form op", id);
 
 
-        Tododata.doc(id).update({ title: data.title, body: data.body, rating: data.rating }).then(() => {
+        db.collection(dbname).doc(id).update({ title: data.title, body: data.body, rating: data.rating }).then(() => {
+
+            // Tododata.doc(id).update({ title: data.title, body: data.body, rating: data.rating }).then(() => {
             Alert.alert("success");
             fetchdata();
         })

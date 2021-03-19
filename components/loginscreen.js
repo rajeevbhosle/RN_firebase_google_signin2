@@ -83,6 +83,8 @@ export const Loginscreen = ({ navigation }) => {
 
                 // Sign in with credential from the Google user.
                 firebase.auth().signInWithCredential(credential).then((u) => {
+                    const u1 = u.user;
+                    AsyncStorage.setItem("dbname", u1.uid)
                     navigation.navigate("Page3");
                 }).catch((error) => {
                     // Handle Errors here.
